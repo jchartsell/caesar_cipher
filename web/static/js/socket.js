@@ -54,7 +54,32 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("topic:subtopic", {})
+let channel         = socket.channel("cipher:lobby", {})
+let cipherTextInput     = $("#cipher-text-input")
+let cipherShiftInput     = $("#cipher-shift-input")
+let outputContainer = $("#output")
+
+cipherTextInput.on("keypress", event => {
+  if(event.keyCode === 13){
+    channel.push("new_msg", {cleartext: cipherTextInput.val(), shift: cipherShiftInput.val()})
+    cipherTextInput.val("")
+    cipherShiftInput.val("")
+  }
+})
+
+cipherShiftInput.on("keypress", event => {
+  if(event.keyCode === 13){
+    channel.push("new_msg", {cleartext: cipherTextInput.val(), shift: cipherShiftInput.val()})
+    cipherTextInput.val("")
+    cipherShiftInput.val("")
+  }
+})
+
+channel.on("new_msg", payload => {
+  outputContainer.html(`<br/>Cleartext: ${payload.cleartext}<br/>Enciphered: ${payload.ciphertext}`)
+})
+
+
 channel.join()
   .receive("ok", resp => { console.log("Joined successfully", resp) })
   .receive("error", resp => { console.log("Unable to join", resp) })

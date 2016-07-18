@@ -2,7 +2,7 @@ defmodule CaesarCipher.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", CaesarCipher.RoomChannel
+  channel "cipher:*", CaesarCipher.CipherChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
